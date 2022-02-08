@@ -1,6 +1,5 @@
 <script setup>
 import mammoth from "mammoth/mammoth.browser";
-import Prism from "prismjs"
 import { reactive } from "vue";
 
 /**
@@ -25,11 +24,6 @@ function readFileAsArrayBuffer(input, callback) {
   };
 
   reader.readAsArrayBuffer(file);
-}
-
-function highlightOutput(code) {
-  const html = Prism.highlight(code, Prism.languages.html, "html")
-  return html
 }
 
 function handleFileSelect(el) {
