@@ -89,14 +89,14 @@ function handleFileSelect(el) {
           return { html, messages };
         })
         .then((result) => {
+          console.log(result.messages);
           const html = result.html;
           /**
            * Create a Blob of the output, in order to create an Object URL, which can then be downloaded in the browser.
            */
           const output = new Blob([result.html], { type: "text/plain" });
           const outputUrl = URL.createObjectURL(output);
-          console.log(result.messages);
-
+          
           return { outputUrl, html };
         })
         .then((result) => {
