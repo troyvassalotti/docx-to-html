@@ -1,6 +1,6 @@
 <script setup>
-import mammoth from "mammoth/mammoth.browser";
-import Prism from "prismjs";
+import { convertToHtml, images } from "mammoth/mammoth.browser";
+import { highlight, languages } from "prismjs";
 import { reactive } from "vue";
 import Output from "./Output.vue";
 
@@ -37,7 +37,7 @@ function handleFileSelect(el) {
    * Default functionality is commented out. It returns a base64 URI of the image.
    */
   const options = {
-    convertImage: mammoth.images.imgElement(function (image) {
+    convertImage: images.imgElement(function (image) {
       // return image.read("base64").then(function (imageBuffer) {
       //   return {
       //     src: "data:" + image.contentType + ";base64," + imageBuffer,
@@ -58,8 +58,7 @@ function handleFileSelect(el) {
     const outputName = file.name.replace(/\.[^.]*$/, "");
 
     readFileAsArrayBuffer(file, (arrayBuffer) => {
-      mammoth
-        .convertToHtml({ arrayBuffer: arrayBuffer }, options)
+      convertToHtml({ arrayBuffer: arrayBuffer }, options)
         .then((result) => {
           /**
            * Replace invisible characters in the output.
@@ -96,7 +95,7 @@ function handleFileSelect(el) {
            */
           const output = new Blob([result.html], { type: "text/plain" });
           const outputUrl = URL.createObjectURL(output);
-          
+
           return { outputUrl, html };
         })
         .then((result) => {
@@ -104,7 +103,7 @@ function handleFileSelect(el) {
             name: `${outputName}.html`,
             url: result.outputUrl,
             html: result.html,
-            prism: Prism.highlight(result.html, Prism.languages.html, "html"),
+            prism: highlight(result.html, languages.html, "html"),
             key: index,
           });
         });

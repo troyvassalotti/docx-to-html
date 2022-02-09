@@ -44,8 +44,8 @@ function handleCopy(e) {
                         <div class="highlight">
                             <button class="copy" @click="handleCopy" :data-copy="file.name">Copy</button>
                             <pre>
-                  <code class="language-html" v-html="file.prism" :id="file.name"></code>
-                </pre>
+                                <code class="language-html" v-html="file.prism" :id="file.name"></code>
+                            </pre>
                         </div>
                     </div>
                 </div>
