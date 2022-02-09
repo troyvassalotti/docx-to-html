@@ -1,6 +1,8 @@
 <script setup>
 import mammoth from "mammoth/mammoth.browser";
+import Prism from "prismjs";
 import { reactive } from "vue";
+import Output from "./Output.vue";
 
 /**
  * Store files ready to be downloaded in state
@@ -31,7 +33,7 @@ function handleFileSelect(el) {
   let index = 0;
 
   /**
-   * Replace default image conversion with a blank element and custom attributes
+   * Replace default image conversion with a blank element and custom attributes.
    * Default functionality is commented out. It returns a base64 URI of the image.
    */
   const options = {
@@ -59,27 +61,50 @@ function handleFileSelect(el) {
       mammoth
         .convertToHtml({ arrayBuffer: arrayBuffer }, options)
         .then((result) => {
+          /**
+           * Replace invisible characters in the output.
+           */
           const html = result.value
+            // Replace empty spaces before closing tags
+            .replace(/\s<\/strong><\/p>/gi, "</strong></p>")
+            .replace(/\s<\/em><\/p>/gi, "</em></p>")
+            .replace(/\s<\/p>/gi, "</p>")
+            .replace(/\s<\/em><\/strong><\/p>/gi, "</em></strong></p>")
+            .replace(/\s<\/strong><\/em><\/p>/gi, "</strong></em></p>")
+
+            // Remove empty tags
+            // Purposefully run these multiple times to cover times where removing the first reveals the second
+            .replace(/<[a-z]*>\s?<\/[a-z]*>/gi, "")
+            .replace(/<[a-z]*>\s?<\/[a-z]*>/gi, "")
+            .replace(/<[a-z]*>\s?<\/[a-z]*>/gi, "")
+
+            // Replace invisible characters
             .replace(/\u00a0/gi, " ")
             .replace(/&nbsp;/gi, " ")
             .replace(/\u2019/gi, "'")
+            .replace(/“/gi, '"')
+            .replace(/”/gi, '"')
             .replace(/\u2013/gi, "&mdash;");
           const messages = result.messages;
           return { html, messages };
         })
         .then((result) => {
-          const html = result.html
+          const html = result.html;
+          /**
+           * Create a Blob of the output, in order to create an Object URL, which can then be downloaded in the browser.
+           */
           const output = new Blob([result.html], { type: "text/plain" });
           const outputUrl = URL.createObjectURL(output);
           console.log(result.messages);
 
-          return {outputUrl, html};
+          return { outputUrl, html };
         })
         .then((result) => {
           store.downloads.push({
             name: `${outputName}.html`,
             url: result.outputUrl,
             html: result.html,
+            prism: Prism.highlight(result.html, Prism.languages.html, "html"),
             key: index,
           });
         });
@@ -90,41 +115,17 @@ function handleFileSelect(el) {
 </script>
 
 <template>
-  <main>
+  <main class="converter">
     <form enctype="multipart/form-data" novalidate @submit="preventDefault()">
-      <label for="upload"
-        >Upload Your Docx
-        <input
-          id="upload"
-          type="file"
-          multiple
-          accept=".doc, .docx"
-          @change="handleFileSelect($event.target)"
-      /></label>
+      <label for="upload">Upload your .docx file(s):</label>
+      <input
+        id="upload"
+        type="file"
+        multiple
+        accept=".doc, .docx"
+        @change="handleFileSelect($event.target)"
+      />
     </form>
-    <div class="output" v-if="store.downloads.length > 0">
-      <h2>Download your files</h2>
-      <ol>
-        <li v-for="file in store.downloads" :key="file.key">
-          <a :href="file.url" :download="file.name">{{ file.name }}</a>
-        </li>
-      </ol>
-      <h2>...Or Copy Your HTML</h2>
-      <div class="output--html">
-        <pre v-for="file in store.downloads" :key="file.key">
-          <code>{{ file.html }}</code>
-        </pre>
-      </div>
-    </div>
+    <Output v-if="store.downloads.length > 0" :files="store.downloads" />
   </main>
 </template>
-
-<style scoped>
-.output--html {
-  display: flex;
-}
-
-pre {
-    white-space: normal;
-}
-</style>

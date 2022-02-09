@@ -23,7 +23,14 @@ html:focus-within {
 }
 
 body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   margin: 0;
   padding: 0;
+}
+
+#app {
+  inline-size: 95%;
+  margin-inline: auto;
+  max-inline-size: 1600px;
 }
 </style>
