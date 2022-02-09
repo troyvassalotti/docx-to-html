@@ -1,5 +1,5 @@
 <script setup>
-import "../../node_modules/prismjs/themes/prism-solarizedlight.css";
+import "../../node_modules/prismjs/themes/prism-solarizedlight.min.css";
 
 defineProps({
     files: Object

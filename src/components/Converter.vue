@@ -1,5 +1,5 @@
 <script setup>
-import { convertToHtml, images } from "mammoth/mammoth.browser";
+import { convertToHtml, images } from "mammoth/mammoth.browser.min";
 import { highlight, languages } from "prismjs";
 import { reactive } from "vue";
 import Output from "./Output.vue";
