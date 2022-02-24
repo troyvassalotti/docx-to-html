@@ -3,7 +3,7 @@ import Converter from "./components/Converter.vue";
 </script>
 
 <template>
-  <h1>NMG Word to HTML Converter</h1>
+  <h1>Word to HTML Converter</h1>
   <Converter />
 </template>
 
