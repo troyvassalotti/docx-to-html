@@ -115,7 +115,7 @@ function handleFileSelect(el) {
 
 <template>
   <main class="converter">
-    <form enctype="multipart/form-data" novalidate @submit="preventDefault()">
+    <form enctype="multipart/form-data" novalidate @submit="$event.preventDefault()">
       <label for="upload">Upload your .docx file(s):</label>
       <input
         id="upload"
@@ -125,6 +125,15 @@ function handleFileSelect(el) {
         @change="handleFileSelect($event.target)"
       />
     </form>
+    <p>Your output will become visible below after uploading.</p>
     <Output v-if="store.downloads.length > 0" :files="store.downloads" />
   </main>
 </template>
+
+<style scoped>
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+</style>
