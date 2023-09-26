@@ -2,6 +2,12 @@
 command = "npm run build"
 publish = "dist"
 
+[[redirects]]
+from = "https://docx-to-html.netlify.com/*"
+to = "https://docx-to-html.troyv.dev/:splat"
+status = 301
+force = true
+
 [build.processing]
 skip_processing = true
 
